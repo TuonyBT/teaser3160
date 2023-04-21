@@ -6,7 +6,7 @@ fn main() {
     let primes = primes(4000);
 
     let mut triplets = HashMap::<Vec<usize>, HashSet<usize>>::new();
-    let mut first_digits = HashMap::<usize, Vec<Vec<usize>>>::new();
+    let mut first_digits = HashMap::<(usize, usize), Vec<Vec<usize>>>::new();
 
     for s in 11usize..32 {
         let ss = s.pow(2);
@@ -31,8 +31,9 @@ fn main() {
                     rest.insert(0, first);
                     let hymn_sum = &rest.iter().map(|&&x| x).sum::<usize>();
                     if primes.contains(&hymn_sum) {
-                        let fd = first / 100;
-                        first_digits.entry(fd).or_insert(Vec::<Vec<usize>>::new())
+                        println!("Prime Sum {}", hymn_sum);
+                        let fd = hymn_sum / 1000;
+                        first_digits.entry((fd, *first)).or_insert(Vec::<Vec<usize>>::new())
                         .push(rest.iter().map(|&&z| z).collect());
                     }
                 }
@@ -40,9 +41,10 @@ fn main() {
         }
 
     }
-    println!("Sequences that match the requirement to sum to a prime, grouped by first digit of first hymn: {:?}", first_digits);
+    println!("Sequences that match the requirement to sum to a prime, grouped by unique combination of first digit of prime sum and first hymn:");
+    println!("{:?}", first_digits);
     for fd in first_digits {
-        if fd.1.len() == 1 {
+        if fd.1.len() > 1 {
             println!("The number of the first hymn was {:?}.", fd.1[0][0]);
         }
     }
